@@ -9,7 +9,7 @@
 	},
 	"id": "user95401.gif-sprites",
 	"name": "GIF Sprites",
-	"version": "v1.0.0",
+	"version": "v1.0.1",
 	"developers": [ "user95401" ],
 	"description": "Adds support for .gif files in CCSprite::create(). Returns CCGIFAnimatedSprite.",
 	"tags": [ "developer", "interface", "utility" ],

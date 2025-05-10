@@ -1,0 +1,26 @@
+{
+	"geode": "4.4.0",
+	"early-load": true,
+	"gd": {
+		"win": "2.2074",
+		"android": "2.2074",
+		"mac": "2.2074",
+		"ios": "2.2074"
+	},
+	"id": "user95401.gif-sprites",
+	"name": "GIF Sprites",
+	"version": "v1.0.0",
+	"developers": [ "user95401" ],
+	"description": "Adds support for .gif files in CCSprite::create(). Returns CCGIFAnimatedSprite.",
+	"tags": [ "developer", "interface", "utility" ],
+	"links": {
+		"community": "https://discord.gg/6SxAbk3bTA",
+		"homepage": "https://t.me/user95401_channel",
+		"source": "https://github.com/user95401/geode-gif-sprites-api"
+	},
+	"api": {
+		"include": [
+			"include/*.h*"
+		]
+	}
+}

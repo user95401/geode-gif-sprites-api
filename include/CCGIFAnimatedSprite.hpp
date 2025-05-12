@@ -8,9 +8,9 @@
 class CCGIFAnimatedSprite : public cocos2d::CCSprite {
 public:
 
-    static CCGIFAnimatedSprite* create(std::string file) {
+    static CCGIFAnimatedSprite* create(const char* file) {
         return geode::cast::typeinfo_cast<CCGIFAnimatedSprite*>(
-            cocos2d::CCSprite::create(file.c_str())
+            cocos2d::CCSprite::create(file)
         );
     }
 

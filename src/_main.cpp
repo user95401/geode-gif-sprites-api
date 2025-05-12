@@ -109,7 +109,7 @@ private:
 
 class CCGIFAnimatedSprite : public CCSprite {
 public:
-    static CCGIFAnimatedSprite* create(const std::string& file) {
+    static CCGIFAnimatedSprite* create(const char* file) {
         auto* asd = new CCGIFAnimatedSprite();
         if (asd && asd->initWithGif(file)) {
             asd->autorelease();
@@ -119,16 +119,16 @@ public:
         return nullptr;
     }
 
-    bool initWithGif(const std::string& file) {
+    bool initWithGif(const char* file) {
         if (!CCSprite::init()) return false;
-        if (!fileExistsInSearchPaths(file.c_str())) {
+        if (!fileExistsInSearchPaths(file)) {
             log::error("GIF '{}' not found", file);
             return false;
         }
 
         //load all frames once via cache
         const auto& frames = GifCache::get().load(
-            CCFileUtils::get()->fullPathForFilename(file.c_str(), false).c_str()
+            CCFileUtils::get()->fullPathForFilename(file, false).c_str()
         );
         if (frames.empty()) return false;
 
@@ -175,10 +175,9 @@ public:
     static CCSprite* create(const char* pszFileName) {
         auto sprite = CCSprite::create(pszFileName);
 
-        std::string file = pszFileName;
+        std::string_view file = pszFileName;
         if (file.size() > 4 && file.substr(file.size() - 4) == ".gif") {
-            CC_SAFE_DELETE(sprite);
-            return CCGIFAnimatedSprite::create(file);
+            return CCGIFAnimatedSprite::create(pszFileName);
         }
 
         return sprite;

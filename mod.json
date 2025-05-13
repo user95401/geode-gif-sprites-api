@@ -9,9 +9,9 @@
 	},
 	"id": "user95401.gif-sprites",
 	"name": "GIF Sprites",
-	"version": "v1.0.2",
+	"version": "v1.0.3",
 	"developers": [ "user95401" ],
-	"description": "Adds support for .gif files in CCSprite::create(). Returns CCGIFAnimatedSprite.",
+	"description": "Adds support for animated gif files in CCSprite::create(), returns CCGIFAnimatedSprite.",
 	"tags": [ "developer", "interface", "utility" ],
 	"links": {
 		"community": "https://discord.gg/6SxAbk3bTA",

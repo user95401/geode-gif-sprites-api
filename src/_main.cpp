@@ -169,17 +169,24 @@ private:
     float m_elapsed;
 };
 
+bool isGif(const char* filename) {
+    std::string_view name = filename;
+    if (name.size() > 4 && name.substr(name.size() - 4) == ".gif") return true;
+
+    auto path = CCFileUtils::get()->fullPathForFilename(filename, 0);
+    std::ifstream file_stream(path.c_str(), std::ios::binary);
+    if (!file_stream) return false;
+
+    char header[6];
+    file_stream.read(header, 6);
+    return std::memcmp(header, "GIF87a", 6) == 0 or std::memcmp(header, "GIF89a", 6) == 0;
+}
+
 #include <Geode/modify/CCSprite.hpp>
 class $modify(CCSprite) {
 public:
     static CCSprite* create(const char* pszFileName) {
-        auto sprite = CCSprite::create(pszFileName);
-
-        std::string_view file = pszFileName;
-        if (file.size() > 4 && file.substr(file.size() - 4) == ".gif") {
-            return CCGIFAnimatedSprite::create(pszFileName);
-        }
-
-        return sprite;
+        if (isGif(pszFileName)) return CCGIFAnimatedSprite::create(pszFileName);
+        return CCSprite::create(pszFileName);
     }
 };

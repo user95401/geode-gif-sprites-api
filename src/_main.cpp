@@ -303,7 +303,7 @@ bool isGif(const char* fileName) {
 class $modify(CCSprite) {
 public:
     static CCSprite* create(const char* pszFileName) {
-        if (!pszFileName || !*pszFileName) return CCSprite::createWithTexture(nullptr);
+        if (!pszFileName || !*pszFileName) return CCSprite::create(pszFileName);
 
         try {
             if (isGif(pszFileName)) {

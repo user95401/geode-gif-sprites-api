@@ -1,30 +1,87 @@
 #pragma once
 
-#include <vector>
-#include <cocos2d.h>
-#include <Geode/utils/casts.hpp>
+#include <Geode/utils/cocos.hpp>
+
+#if !defined(_GIF_LIB_H_)
+
+#define gifbool unsigned char
+typedef unsigned char GifByteType;
+typedef int GifWord;
+
+typedef struct GifColorType {
+    GifByteType Red, Green, Blue;
+} GifColorType;
+
+typedef struct ColorMapObject {
+    int ColorCount;
+    int BitsPerPixel;
+    gifbool SortFlag;
+    GifColorType* Colors;    /* on malloc(3) heap */
+} ColorMapObject;
+
+typedef struct GifImageDesc {
+    GifWord Left, Top, Width, Height;   /* Current image dimensions. */
+    gifbool Interlace;                     /* Sequential/Interlaced lines. */
+    ColorMapObject* ColorMap;           /* The local color map */
+} GifImageDesc;
+
+
+NS_CC_BEGIN;
 
 //its only member reference and cast helper...
-class CCGIFAnimatedSprite : public cocos2d::CCSprite {
+class CCGIFAnimatedSprite : public CCSprite { //728bytes
 public:
+    class GIFFrame : public CCObject {
+    public:
+        CCTexture2D* m_texture = nullptr;
+        float m_delay = 0.1f;
+        GifImageDesc imageDesc;
+        int m_disposalMethod = 0;
+        int m_transparentColorIndex = -1;
+    };
 
     static CCGIFAnimatedSprite* create(const char* file) {
-        return geode::cast::typeinfo_cast<CCGIFAnimatedSprite*>(
-            cocos2d::CCSprite::create(file)
-        );
+        auto spr = CCSprite::create(file);
+        auto cast = geode::cast::typeinfo_cast<CCGIFAnimatedSprite*>(spr);
+        return cast;
     }
 
-    // Frame textures
-    const std::vector<cocos2d::CCTexture2D*>& getFrames() const { return m_frames; }
-    // Delays between frames
-    const std::vector<float>& getDelays() const { return m_delays; }
-    // Current frame index
-    size_t getCurrentIndex() const { return m_index; }
-    // Elapsed time since last frame
-    float getElapsed() const { return m_elapsed; }
+    void play() { m_isPlaying = true; }
+    void pause() { m_isPlaying = false; }
+    void stop() { m_isPlaying = false; m_currentFrame = 0; }
+    void setLoop(bool loop) { m_loop = loop; }
+    bool isPlaying() const { return m_isPlaying; }
 
-    std::vector<cocos2d::CCTexture2D*> m_frames;     // Frame textures
-    std::vector<float> m_delays;            // Delays between frames
-    size_t m_index;                         // Current frame index
-    float m_elapsed;                        // Elapsed time since last frame
+    unsigned int getCurrentFrame() const { return m_currentFrame; }
+    void setCurrentFrame(unsigned int frame) {
+        if (!m_frames or frame >= m_frames->count()) return;
+
+        m_currentFrame = frame;
+        m_frameTimer = 0.0f;
+
+        GIFFrame* targetFrame = geode::cast::typeinfo_cast<GIFFrame*>(m_frames->objectAtIndex(frame));
+        if (targetFrame and targetFrame->m_texture) {
+            setTexture(targetFrame->m_texture);
+        }
+    }
+
+    unsigned int getFrameCount() const { return m_frames ? m_frames->count() : 0; }
+
+    CCArray* m_frames = nullptr;
+    unsigned int m_currentFrame = 0;
+    float m_frameTimer = 0.0f;
+    bool m_isPlaying = true;
+    bool m_loop = true;
+    GifWord m_canvasWidth = 0;
+    GifWord m_canvasHeight = 0;
+    GifByteType* m_canvasBuffer = nullptr;
+    GifByteType* m_previousBuffer = nullptr;
+    ColorMapObject* m_globalColorMap = nullptr;
+    bool m_hasTransparentBackground = false;
+    std::string m_filename = "";
+    std::string m_checksum = "";
 };
+
+NS_CC_END;
+
+#endif

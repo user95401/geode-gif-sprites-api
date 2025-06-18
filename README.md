@@ -22,8 +22,13 @@ auto gif = CCGIFAnimatedSprite::create("animated.gif");
 gif->setPosition(this->getContentSize() / 2);
 this->addChild(gif, 10);
 
-//and you able to getElapsed and stuff
-float gifTimeElapsed = gif->getElapsed();
+//mbo stuff
+gif->play();
+gif->pause();
+gif->stop();
+gif->setLoop(false);
+bool playing = gif->isPlaying();
+auto filename = gif->m_filename; //str
 ```
 
 Using texture pack (or any other resource modding ways) you can replace some files like `GJ_gradientBG.png`, just rename your `epic-anime-wallpaper.gif` exactly to `GJ_gradientBG.png`, mod detect it as long as this file is GIF87a or GIF89a.
@@ -42,7 +47,7 @@ Add to your `mod.json` dependencies:
 
 ```json
 "dependencies": {
-	"user95401.gif-sprites": ">=v1.0.0"
+	"user95401.gif-sprites": ">=v2.0.0"
 }
 ```
 
